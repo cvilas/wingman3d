@@ -1,0 +1,83 @@
+# ==================================
+# QMath installation script
+# ==================================
+
+if [ "$1" = "-v" ]; then
+	shift 1
+	verbose=-v
+fi
+
+if [ $1 ]; then
+	SOURCE=$1
+	TARGET=$2
+	HELPSOURCE=$3
+	HELPTARGET=$4
+else
+	SOURCE=.
+	TARGET=$QRTS
+	HELPSOURCE=help
+	HELPTARGET=$QRTS/help/qrts
+fi
+
+# ----- Start Message -----
+if [ "$verbose" = -v ]; then
+	echo
+	echo ============================================
+	echo Wingman SDK Installation, Copyright 1999 QRTS
+	echo ============================================
+	echo
+	echo Installing from: $SOURCE
+	echo Installing to: $TARGET
+fi
+
+# ----- Create directories if not there yet -----
+if (checkdirs $TARGET $TARGET/lib $TARGET/include $TARGET/examples)
+	then
+		if [ "$verbose" = -v ]; then
+			echo "QRTS directories in place, proceeding with installation."
+		fi
+	else
+		echo "QRTS directories can not be set up properly, can not proceed."
+		exit 1
+fi
+
+
+# ----- Copying the examples -----
+if [ "$verbose" = -v ]; then
+	echo Copying example programs.
+fi
+find $SOURCE/examples/WingmanClient -type d -exec 'chmod 755 {}'
+find $SOURCE/examples/Wingman3D -type d -exec 'chmod 755 {}'
+cp -M qnx -r $SOURCE/examples/WingmanClient $TARGET/examples/WingmanClient
+cp -M qnx -r $SOURCE/examples/Wingman3D $TARGET/examples/Wingman3D
+
+# ----- Copying the binaries -----
+if [ "$verbose" = -v ]; then
+	echo Copying binaries.
+fi
+chmod og-w,ug+xsr $SOURCE/bin/WingmanServer
+cp -M qnx -r $SOURCE/bin $TARGET/bin
+
+# ----- Copying the online help -----
+if [ "$verbose" = -v ]; then
+	echo Copying help files.
+fi
+cp $HELPSOURCE/wingman.toc $HELPTARGET
+cp -M qnx -r $HELPSOURCE/wingman $HELPTARGET/wingman
+
+# ----- Copying headerfiles -----
+if [ "$verbose" = -v ]; then
+	echo Copying header files.
+fi
+cp -r $SOURCE/include/* $TARGET/include
+
+# ----- Copying libraries -----
+if [ "$verbose" = -v ]; then
+	echo Copying libraries files.
+fi
+cp $SOURCE/lib/* $TARGET/lib
+
+if [ "$verbose" = -v ]; then
+	echo
+	echo Installation complete.
+fi

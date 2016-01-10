@@ -1,0 +1,55 @@
+if [ `uname` != 'QNX' ]; then
+ echo "ERROR : This script is for a PC running QNX 6.2.1 only."
+ exit 1
+fi
+
+# Target directory
+TARGET=Wingman
+
+# Remove previous stuff
+rm -rf $TARGET
+rm -f $TARGET.tar.gz
+rm -f $TARGET.tar
+
+# Make directories
+mkdir $TARGET
+mkdir $TARGET/lib
+mkdir $TARGET/include
+mkdir $TARGET/bin
+mkdir -p $TARGET/examples/Wingman3D
+mkdir -p $TARGET/examples/WingmanClient
+mkdir $TARGET/help
+
+# Copy include files
+cp ../WingmanClient/WingmanClient.hpp $TARGET/include/
+cp ../Wingman3D/Wingman3D.hpp $TARGET/include/
+
+
+# Copy source files
+# none
+
+# Copy libraries
+cp ../WingmanClient/libWingmanClient.* $TARGET/lib
+cp ../Wingman3D/libWingman3D.* $TARGET/lib
+
+# Copy binaries
+cp ../WingmanServer/WingmanServer $TARGET/bin
+
+# Etc
+cp ./qinstall.nto $TARGET/qinstall
+#cp etc/readme $TARGET
+#cp version_and_date $TARGET
+
+# Examples
+cp -M qnx -r ../WingmanClient/examples/* $TARGET/examples/WingmanClient
+cp -M qnx -r ../Wingman3D/examples/* $TARGET/examples/Wingman3D
+
+# Help
+cp -r ./docs/* $TARGET/help
+
+# Tar it up and zip it
+tar -cvf $TARGET-qnx6.2.1.tar $TARGET
+gzip $TARGET-qnx6.2.1.tar
+
+# Remove directory
+rm -rf $TARGET

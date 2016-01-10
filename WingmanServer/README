@@ -1,0 +1,49 @@
+README: Logitech Wingman HID Joystick
+Author: Vilas Kumar Chitrakaran
+
+Version 1.01: August 6, 2005
+ - Changes to make it work with Logitech Extreme 3D Pro
+   * struct wingman_data: Changed data type of 'buttons' from char to int
+   
+   * WingmanServer (Constructor) : Changed
+      hidd_device_ident_t interest = {HID_VENDOR_LOGITECH, 
+                                      HIDD_CONNECT_WILDCARD,
+                                      HID_VERSION};
+    to
+      hidd_device_ident_t interest = {HID_VENDOR_LOGITECH,
+                           HIDD_CONNECT_WILDCARD,
+                           HIDD_CONNECT_WILDCARD};
+
+   * onInsertion: Removed 
+      hidd_report_props_t props[8] 
+     and replaced with 
+      hidd_report_props_t *props = new hidd_report_props_t[numprops]; 
+     and 
+      delete[] (props)
+   
+   * onInsertion: Changed 
+     if(props[i].usage_page == HIDD_PAGE_BUTTONS)
+      s_joystick[dev_no].data->num_buttons = props[i].report_count;
+     to
+     if(props[i].usage_page == HIDD_PAGE_BUTTONS)
+      s_joystick[dev_no].data->num_buttons += props[i].report_count;
+   
+   * onHidReport: changed for loop indexing for buttons so that
+     the loop counts from 0 to num_buttons and not 8.
+
+Version 1.0s: Released August 28, 2004
+ - Special version: No separate Wingman3D class. That functionality
+   is directly included in the WingmanServer class
+ - Can handle two USB HID joysticks. 
+
+Version 1.0: Expected release July 16, 2004
+ - Recognizes Wingman Extreme 3D and Force 3D
+ - Protect static members with mutexes.
+ - Ability to work with multiple devices
+ - Provide getMax..() functions. Dont normalize outputs
+
+
+Version 0.9: Released March 3, 2004
+ - This is the first version of the driver class. 
+ - Fully functional.
+ - May not work with multiple joysticks on same PC.

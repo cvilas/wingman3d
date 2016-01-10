@@ -1,0 +1,293 @@
+\hypertarget{class_WingmanClient}{
+\section{Wingman\-Client  Class Reference}
+\label{class_WingmanClient}\index{WingmanClient@{Wingman\-Client}}
+}
+Connects to Logitech Wingman USB HID joystick server. 
+
+
+{\tt \#include $<$Wingman\-Client.hpp$>$}
+
+Inheritance diagram for Wingman\-Client:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=%.6lgcm]{class_WingmanClient}
+\end{center}
+\end{figure}
+\subsection*{Public Methods}
+\begin{CompactItemize}
+\item 
+\hyperlink{class_WingmanClient_a0}{Wingman\-Client} (int dev\-Num, char $\ast$server\-Name = "qrts/usbjs")
+\item 
+\hyperlink{class_WingmanClient_a1}{$\sim$Wingman\-Client} ()
+\item 
+bool \hyperlink{class_WingmanClient_a2}{is\-Joystick\-Present} ()
+\item 
+int \hyperlink{class_WingmanClient_a3}{get\-X} () const
+\item 
+int \hyperlink{class_WingmanClient_a4}{get\-Max\-X} () const
+\item 
+int \hyperlink{class_WingmanClient_a5}{get\-Y} () const
+\item 
+int \hyperlink{class_WingmanClient_a6}{get\-Max\-Y} () const
+\item 
+int \hyperlink{class_WingmanClient_a7}{get\-Twist} () const
+\item 
+int \hyperlink{class_WingmanClient_a8}{get\-Max\-Twist} () const
+\item 
+int \hyperlink{class_WingmanClient_a9}{get\-Num\-Buttons} () const
+\item 
+bool \hyperlink{class_WingmanClient_a10}{is\-Button\-Pressed} (int button) const
+\item 
+int \hyperlink{class_WingmanClient_a11}{get\-Slider\-Value} () const
+\item 
+int \hyperlink{class_WingmanClient_a12}{get\-Max\-Slider\-Value} () const
+\item 
+int \hyperlink{class_WingmanClient_a13}{get\-Hat\-Switch\-Status} () const
+\item 
+bool \hyperlink{class_WingmanClient_a14}{is\-Status\-Ok} ()
+\item 
+const char$\ast$ \hyperlink{class_WingmanClient_a15}{get\-Status\-Message} ()
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+Connects to Logitech Wingman USB HID joystick server.
+
+{\bf Example Program:}
+
+\footnotesize\begin{verbatim}//======================================================================== 
+// Project: Logitech Wingman Joystick Client 
+// ---------------------------------------------------------------------- 
+// Package: WingmanClient
+// Authors: Vilas Kumar Chitrakaran
+// Start Date: Thu Mar 04 11:01:10 EST 2004
+// ----------------------------------------------------------------------  
+// File: WingmanClient.t.cpp
+// Example program for the class WingmanClient.
+//========================================================================  
+ 
+
+#include "WingmanClient.hpp"
+#include <stdio.h>
+#include <stdlib.h>
+
+ 
+//======================================================================== 
+// main 
+// -----------------------------------------------------------------------
+// Note that WingmanServer must be running for this program to work. The
+// server can be started as follows:
+// 1. First ensure that the USB manager (devu-uhci or devu-ohci) and manager 
+// for HID devices (io-hid) are running. Here are
+// the commands (you may put these in /etc/rc.d/rc.local)
+//
+// /sbin/devu-uhci & (or /sbin/devu-ohci &)
+// /sbin/io-hid &
+// mount -Tio-hid devh-usb.so &
+// 
+// 2. Now start a server named "usbjs" as follows :
+// WingmanServer -n qrts/usbjs &
+//
+// After starting the server, activate any of the degrees of freedom of
+// the joystick once so that data structures are initialized to proper
+// values.
+//========================================================================  
+ 
+int main()
+{
+ WingmanClient *joystick;
+ 
+ joystick = new WingmanClient(0, "qrts/usbjs");
+ if( !joystick->isStatusOk() ) {
+  fprintf(stderr, "%s\n", joystick->getStatusMessage());
+  return -1;
+ }
+
+ while(1)
+ {
+  fprintf(stdout, "\nx: %03d y: %03d z: %03d slide: %03d hat: %03d buttons: ", 
+   joystick->getX(), joystick->getY(), joystick->getTwist(),
+   joystick->getSliderValue(), joystick->getHatSwitchStatus());
+ 
+  for(int i = 1; i < joystick->getNumButtons(); i++)
+   if( joystick->isButtonPressed(i) )
+    fprintf(stdout, "%01d ", i);
+
+  if( !joystick->isStatusOk() )
+   return -1;
+  
+ }
+ 
+ delete(joystick);
+ 
+ return 0;
+}
+
+\end{verbatim}\normalsize 
+ 
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_WingmanClient_a0}{
+\index{WingmanClient@{Wingman\-Client}!WingmanClient@{WingmanClient}}
+\index{WingmanClient@{WingmanClient}!WingmanClient@{Wingman\-Client}}
+\subsubsection[WingmanClient]{\setlength{\rightskip}{0pt plus 5cm}Wingman\-Client::Wingman\-Client (int {\em dev\-Num}, char $\ast$ {\em server\-Name} = "qrts/usbjs")}}
+\label{class_WingmanClient_a0}
+
+
+The constructor. Connects to joystick server \hypertarget{class_WingmanClient_a1}{
+\index{WingmanClient@{Wingman\-Client}!~WingmanClient@{$\sim$WingmanClient}}
+\index{~WingmanClient@{$\sim$WingmanClient}!WingmanClient@{Wingman\-Client}}
+\subsubsection[~WingmanClient]{\setlength{\rightskip}{0pt plus 5cm}Wingman\-Client::$\sim$Wingman\-Client ()}}
+\label{class_WingmanClient_a1}
+
+
+The destructor disconnects from the joystick server 
+
+\subsection{Member Function Documentation}
+\hypertarget{class_WingmanClient_a2}{
+\index{WingmanClient@{Wingman\-Client}!isJoystickPresent@{isJoystickPresent}}
+\index{isJoystickPresent@{isJoystickPresent}!WingmanClient@{Wingman\-Client}}
+\subsubsection[isJoystickPresent]{\setlength{\rightskip}{0pt plus 5cm}bool Wingman\-Client::is\-Joystick\-Present ()}}
+\label{class_WingmanClient_a2}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ true if joystick is connected, else false. \end{Desc}
+\hypertarget{class_WingmanClient_a3}{
+\index{WingmanClient@{Wingman\-Client}!getX@{getX}}
+\index{getX@{getX}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getX]{\setlength{\rightskip}{0pt plus 5cm}int Wingman\-Client::get\-X () const}}
+\label{class_WingmanClient_a3}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ The X position \end{Desc}
+\hypertarget{class_WingmanClient_a4}{
+\index{WingmanClient@{Wingman\-Client}!getMaxX@{getMaxX}}
+\index{getMaxX@{getMaxX}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getMaxX]{\setlength{\rightskip}{0pt plus 5cm}int Wingman\-Client::get\-Max\-X () const}}
+\label{class_WingmanClient_a4}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ The maximum output from X axis. \end{Desc}
+\hypertarget{class_WingmanClient_a5}{
+\index{WingmanClient@{Wingman\-Client}!getY@{getY}}
+\index{getY@{getY}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getY]{\setlength{\rightskip}{0pt plus 5cm}int Wingman\-Client::get\-Y () const}}
+\label{class_WingmanClient_a5}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ The Y position \end{Desc}
+\hypertarget{class_WingmanClient_a6}{
+\index{WingmanClient@{Wingman\-Client}!getMaxY@{getMaxY}}
+\index{getMaxY@{getMaxY}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getMaxY]{\setlength{\rightskip}{0pt plus 5cm}int Wingman\-Client::get\-Max\-Y () const}}
+\label{class_WingmanClient_a6}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ The maximum output from Y axis. \end{Desc}
+\hypertarget{class_WingmanClient_a7}{
+\index{WingmanClient@{Wingman\-Client}!getTwist@{getTwist}}
+\index{getTwist@{getTwist}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getTwist]{\setlength{\rightskip}{0pt plus 5cm}int Wingman\-Client::get\-Twist () const}}
+\label{class_WingmanClient_a7}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ The twist handle position. \end{Desc}
+\hypertarget{class_WingmanClient_a8}{
+\index{WingmanClient@{Wingman\-Client}!getMaxTwist@{getMaxTwist}}
+\index{getMaxTwist@{getMaxTwist}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getMaxTwist]{\setlength{\rightskip}{0pt plus 5cm}int Wingman\-Client::get\-Max\-Twist () const}}
+\label{class_WingmanClient_a8}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ The maximum output from twist axis. \end{Desc}
+\hypertarget{class_WingmanClient_a9}{
+\index{WingmanClient@{Wingman\-Client}!getNumButtons@{getNumButtons}}
+\index{getNumButtons@{getNumButtons}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getNumButtons]{\setlength{\rightskip}{0pt plus 5cm}int Wingman\-Client::get\-Num\-Buttons () const}}
+\label{class_WingmanClient_a9}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ The number of programmable buttons available \end{Desc}
+\hypertarget{class_WingmanClient_a10}{
+\index{WingmanClient@{Wingman\-Client}!isButtonPressed@{isButtonPressed}}
+\index{isButtonPressed@{isButtonPressed}!WingmanClient@{Wingman\-Client}}
+\subsubsection[isButtonPressed]{\setlength{\rightskip}{0pt plus 5cm}bool Wingman\-Client::is\-Button\-Pressed (int {\em button}) const}}
+\label{class_WingmanClient_a10}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ true if button {\em button} is pressed, else false \end{Desc}
+\hypertarget{class_WingmanClient_a11}{
+\index{WingmanClient@{Wingman\-Client}!getSliderValue@{getSliderValue}}
+\index{getSliderValue@{getSliderValue}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getSliderValue]{\setlength{\rightskip}{0pt plus 5cm}int Wingman\-Client::get\-Slider\-Value () const}}
+\label{class_WingmanClient_a11}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ The slider/throttle position. Range \mbox{[}0 - 255\mbox{]}. \end{Desc}
+\hypertarget{class_WingmanClient_a12}{
+\index{WingmanClient@{Wingman\-Client}!getMaxSliderValue@{getMaxSliderValue}}
+\index{getMaxSliderValue@{getMaxSliderValue}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getMaxSliderValue]{\setlength{\rightskip}{0pt plus 5cm}int Wingman\-Client::get\-Max\-Slider\-Value () const}}
+\label{class_WingmanClient_a12}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ The maximum output from slider. \end{Desc}
+\hypertarget{class_WingmanClient_a13}{
+\index{WingmanClient@{Wingman\-Client}!getHatSwitchStatus@{getHatSwitchStatus}}
+\index{getHatSwitchStatus@{getHatSwitchStatus}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getHatSwitchStatus]{\setlength{\rightskip}{0pt plus 5cm}int Wingman\-Client::get\-Hat\-Switch\-Status () const}}
+\label{class_WingmanClient_a13}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ A value indicating position of the hat switch. Range \mbox{[}1 - 8\mbox{]}. \end{Desc}
+\hypertarget{class_WingmanClient_a14}{
+\index{WingmanClient@{Wingman\-Client}!isStatusOk@{isStatusOk}}
+\index{isStatusOk@{isStatusOk}!WingmanClient@{Wingman\-Client}}
+\subsubsection[isStatusOk]{\setlength{\rightskip}{0pt plus 5cm}bool Wingman\-Client::is\-Status\-Ok ()}}
+\label{class_WingmanClient_a14}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ true if joystick/client status is ok, else false. \end{Desc}
+\hypertarget{class_WingmanClient_a15}{
+\index{WingmanClient@{Wingman\-Client}!getStatusMessage@{getStatusMessage}}
+\index{getStatusMessage@{getStatusMessage}!WingmanClient@{Wingman\-Client}}
+\subsubsection[getStatusMessage]{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ Wingman\-Client::get\-Status\-Message ()}}
+\label{class_WingmanClient_a15}
+
+
+\begin{Desc}
+\item[{\bf Returns: }]\par
+ A string carrying current status of the device. This string  also carries error messages when \hyperlink{class_WingmanClient_a14}{is\-Status\-Ok}() returns false. \end{Desc}
+
+
+The documentation for this class was generated from the following file:\begin{CompactItemize}
+\item 
+\hyperlink{WingmanClient_hpp-source}{Wingman\-Client.hpp}\end{CompactItemize}
